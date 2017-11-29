@@ -1,7 +1,7 @@
 QT += core
 QT -= gui
 
-CONFIG += c++11
+CONFIG += c++14
 
 TARGET = graph
 CONFIG += console
@@ -26,4 +26,5 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 HEADERS += \
     graph.h \
-    graphedge.h
+    graphedge.h \
+    dsf.h

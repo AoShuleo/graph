@@ -5,37 +5,40 @@
 #include <QList>
 #include <QVector>
 #include <QString>
+#include <QHash>
+#include <QSet>
+
 #include <graphedge.h>
 class Graph
 {
 
 private:
-    QList<GraphEdge*> listEdges;
-    QVector<QString> setVertexes;
+    QHash<QString, int> hashVertex;
+    QSet<GraphEdge*> setEdges;
+
+    int countVertex;
 
     void addEdgeByEdge(GraphEdge *eg);
-    bool checkCycle(QString vertA, QString vertB);
-    bool recCheckVertex(int vertex, int prevVertex, int baseVertex);
-    void recCheckConnectivity(GraphEdge *ge, int prevVertex, QVector<GraphEdge*>*vectorE);
 public:
     Graph();
     bool addVertex(QString sVertex); //добавление вершины в граф
     bool addEdge(QString vertA, QString vertB, float dist); //добавление ребра в граф
-    bool sortEdges(); //сортировка ребер по их весу/длине
+    QList<GraphEdge *> sortEdges(); //сортировка ребер по их весу/длине
     Graph getTree(); //извлечь минимальное остовное дерево
 
     QString getVertex(int iVertex){
-        return setVertexes.at(iVertex);
+        return hashVertex.key(iVertex);
     }
+    ;
     int getIndexVertex(QString sVertex){
-        return setVertexes.indexOf(sVertex);
+        return hashVertex.value(sVertex, -1);
     }
 
-    int indexEdge(QString sVertexA, QString sVertexB);//индекс ребра в массиве ребер
+    GraphEdge* getEdge(QString sVertexA, QString sVertexB);//индекс ребра в массиве ребер
 
     int getNumberEdge() //количество ребер в графе
     {
-        return listEdges.length();
+        return setEdges.size();
     }
 
     bool checkConnectivity();

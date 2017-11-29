@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
             return a.exec();
         }
 
+        //int p1e, p2s, p2e, p3s;
         while(!fileInput.atEnd()){
             str = fileInput.readLine();
             str.remove("\n");
@@ -75,19 +76,23 @@ int main(int argc, char *argv[])
                 return a.exec();
             }
 
+           /* p1e = str.indexOf(',');
+            p2s = p1e + 1;
+            while(str[p2s] == ' ') ++p2s;
+            p2e = str.indexOf(',',p2s);
+            p3s = p2e + 1;
+            while(str[p3s] == ' ') ++p3s;
+
+            dist = str.mid(p3s).toFloat();
+            if(!graph1.addEdge(str.mid(0,p1e),str.mid(p2s,(p2e-p2s)),dist)){
+                std::cout << "Don't add edge from file input.txt in graph: " << str.toStdString();
+                return a.exec();
+            }*/
+
             slist = str.split(sReg, QString::SkipEmptyParts);
-            /*if(slist.length() != 3){
-                std::cout << "Wrong line-edge: " << str.toStdString();
-                return a.exec();
-            }*/
-
             dist = ((QString)slist[2]).toFloat();
-           /* if(bf2 == false){
-                std::cout << "Some error with distance: " << str.toStdString();
-                return a.exec();
-            }*/
 
-            if(!graph1.addEdge(slist.at(0),slist.at(1),dist)){
+            if(!graph1.addEdge(slist[0],slist[1],dist)){
                 std::cout << "Don't add edge from file input.txt in graph: " << str.toStdString();
                 return a.exec();
             }
@@ -119,7 +124,7 @@ int main(int argc, char *argv[])
     }
 
     QRegExp reg3("^(\\w+,\\s*\\w+)$");
-    QVector<int> indexVector;
+    QVector<GraphEdge *> indexVector;
 
     std::cout<< "Beginning of reading file result.txt" << std::endl;
 
@@ -136,22 +141,18 @@ int main(int argc, char *argv[])
         }
 
         slist = str.split(sReg, QString::SkipEmptyParts);
-       /* if(sList.length() != 2){
-            std::cout << "Wrong edge-line in result.txt (length list error): " << str.toStdString();
-            return a.exec();
-        }*/
 
-        int indexEdge = graph2.indexEdge(slist[0],slist[1]);
-        if(indexEdge < 0){
+        GraphEdge *ge = graph2.getEdge(slist[0],slist[1]);
+        if(ge == nullptr){
             std::cout << "Wrong edge in result.txt (Correct graph-tree doesn't contain this edge): " << str.toStdString();
             return a.exec();
         }
 
-        if(indexVector.contains(indexEdge)){
+        if(indexVector.contains(ge)){
             std::cout << "Edge from result.txt is repeated: " << str.toStdString();
             return a.exec();
         }
-        indexVector.append(indexEdge);
+        indexVector.append(ge);
     }
     if(indexVector.length() != graph2.getNumberEdge()){
         std::cout << "Result graph-tree from file result.txt is wrong!";
