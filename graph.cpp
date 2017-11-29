@@ -107,11 +107,13 @@ GraphEdge *Graph::getEdge(QString sVertexA, QString sVertexB)
 bool Graph::checkConnectivity()
 {
     QStack<int> stackVertex;
-    QVector<int> connVertex;
+    QSet<int> connVertex;
     int currentVertex = 0, nextVertex = 0;
 
     stackVertex.push(currentVertex);
-    connVertex.append(currentVertex);
+
+    connVertex.reserve(countVertex+1);
+    connVertex.insert(currentVertex);
 
     QList<GraphEdge *> listEdges = setEdges.toList();
     while(stackVertex.length() > 0){
@@ -130,7 +132,7 @@ bool Graph::checkConnectivity()
                 if(!connVertex.contains(nextVertex)){
                     //currentVertex = nextVertex;
                     stackVertex.push(nextVertex);
-                    connVertex.append(nextVertex);
+                    connVertex.insert(nextVertex);
                 }
                 else
                 {
@@ -139,6 +141,6 @@ bool Graph::checkConnectivity()
             }
         }
     }
-    return connVertex.length() == countVertex;
+    return connVertex.size() == countVertex;
 
 }
