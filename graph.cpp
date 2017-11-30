@@ -106,7 +106,7 @@ GraphEdge *Graph::getEdge(QString sVertexA, QString sVertexB)
 
 bool Graph::checkConnectivity()
 {
-    QStack<int> stackVertex;
+    /*QStack<int> stackVertex;
     QSet<int> connVertex;
     int currentVertex = 0, nextVertex = 0;
 
@@ -141,6 +141,8 @@ bool Graph::checkConnectivity()
             }
         }
     }
-    return connVertex.size() == countVertex;
+    return connVertex.size() == countVertex;*/
+
+
 
 }

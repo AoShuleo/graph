@@ -29,7 +29,11 @@ public:
     QString getVertex(int iVertex){
         return hashVertex.key(iVertex);
     }
-    ;
+
+    int getCountVertex(){
+        return countVertex;
+    }
+
     int getIndexVertex(QString sVertex){
         return hashVertex.value(sVertex, -1);
     }

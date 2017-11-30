@@ -8,6 +8,7 @@
 #include <iostream>
 #include <windows.h>
 
+#include "dsf.h"
 #include "graph.h"
 
 int main(int argc, char *argv[])
@@ -30,7 +31,7 @@ int main(int argc, char *argv[])
 
     Graph graph1;
 
-    LARGE_INTEGER l1,l2;
+    LARGE_INTEGER l1,l2,lr,lre;
     QueryPerformanceFrequency(&l1);
     double freq = double(l1.QuadPart)/1000.0;
 
@@ -41,7 +42,8 @@ int main(int argc, char *argv[])
     float dist;
     QStringList slist;
     std::cout<< "Beginning of reading file input.txt" << std::endl;
-    QueryPerformanceCounter(&l1);
+    QueryPerformanceCounter(&lr);
+
 
     while(!fileInput.atEnd()){
         QString str = fileInput.readLine();
@@ -65,7 +67,8 @@ int main(int argc, char *argv[])
             return a.exec();
         }
 
-        //int p1e, p2s, p2e, p3s;
+        DSF dfs(graph1.getCountVertex());
+
         while(!fileInput.atEnd()){
             str = fileInput.readLine();
             str.remove("\n");
@@ -76,19 +79,6 @@ int main(int argc, char *argv[])
                 return a.exec();
             }
 
-           /* p1e = str.indexOf(',');
-            p2s = p1e + 1;
-            while(str[p2s] == ' ') ++p2s;
-            p2e = str.indexOf(',',p2s);
-            p3s = p2e + 1;
-            while(str[p3s] == ' ') ++p3s;
-
-            dist = str.mid(p3s).toFloat();
-            if(!graph1.addEdge(str.mid(0,p1e),str.mid(p2s,(p2e-p2s)),dist)){
-                std::cout << "Don't add edge from file input.txt in graph: " << str.toStdString();
-                return a.exec();
-            }*/
-
             slist = str.split(sReg, QString::SkipEmptyParts);
             dist = ((QString)slist[2]).toFloat();
 
@@ -96,19 +86,24 @@ int main(int argc, char *argv[])
                 std::cout << "Don't add edge from file input.txt in graph: " << str.toStdString();
                 return a.exec();
             }
+            else{
+                dfs.unionM(graph1.getIndexVertex(slist[0]),graph1.getIndexVertex(slist[1]));
+            }
         }
-    }
-    QueryPerformanceCounter(&l2);
-    std::cout << "time: " << (l2.QuadPart - l1.QuadPart)/freq << " ms" << std::endl;
 
-    std::cout<< "Beginning of checking connectivity of the graph" << std::endl;
-    QueryPerformanceCounter(&l1);
-    if(!graph1.checkConnectivity()){
-        std::cout << "Graph from file input.txt isn't connectivity";
-        return a.exec();
+        std::cout<< "Beginning of checking connectivity of the graph" << std::endl;
+        QueryPerformanceCounter(&l1);
+        if(!dfs.isComplete()){
+            std::cout << "Graph from file input.txt isn't connectivity";
+            return a.exec();
+        }
+        QueryPerformanceCounter(&l2);
+        std::cout << "time: " << (l2.QuadPart - l1.QuadPart)/freq << " ms" << std::endl;
     }
-    QueryPerformanceCounter(&l2);
-    std::cout << "time: " << (l2.QuadPart - l1.QuadPart)/freq << " ms" << std::endl;
+    QueryPerformanceCounter(&lre);
+    std::cout << "time: " << (lre.QuadPart - lr.QuadPart)/freq << " ms" << std::endl;
+
+
 
     std::cout<< "Beginning of extraction of a tree from the graph" << std::endl;
 

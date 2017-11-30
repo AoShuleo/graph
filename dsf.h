@@ -8,10 +8,13 @@ class DSF
 {
     QVector<int> sets; // номер множества
     QVector<int> rnk; // ранг
+    int size = 0;
 public:
 
     DSF(int size)
     {
+        this->size = size;
+
         rnk =  QVector<int>(size);
         for (int i = 0; i < size; i++)
             sets.append(i);
@@ -42,6 +45,17 @@ public:
         }
         return true;
     }
+
+    bool isComplete() {
+           // checks if set is complete (all elements are in one set)
+           int primary_set = setM(0);
+           for (int i = 1; i < size; ++i) {
+               if (setM(i) != primary_set) {
+                   return false;
+               }
+           }
+           return true;
+       }
 };
 
 #endif // DSF_H
